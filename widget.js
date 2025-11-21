@@ -1,9 +1,11 @@
 async function initWinebutlerWidget() {
     try {
-        // HTML und CSS laden
+        const CDN = "https://scholtyl.github.io/WinebutlerCDN/";
+
+        // Load HTML & CSS from CDN
         const [html, css] = await Promise.all([
-            fetch("widget.html").then(r => r.text()),
-            fetch("widget.css").then(r => r.text())
+            fetch(CDN + "widget.html").then(r => r.text()),
+            fetch(CDN + "widget.css").then(r => r.text())
         ]);
 
         // Host-Element im normalen DOM anlegen
