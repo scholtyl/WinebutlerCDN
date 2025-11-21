@@ -1,0 +1,164 @@
+/* Root im Shadow DOM – Basis-Typo */
+#wb-root {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    color: #111 !important;
+}
+
+/* Floating Button */
+#wb-chat-button {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 64px;
+    height: 64px;
+    background: #7A2E2A;
+    color: white;
+    font-size: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+    z-index: 2147483647;
+}
+
+#wb-chat-button:hover {
+    transform: scale(1.07);
+}
+
+/* Chat Window Container */
+#wb-chat-window {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    width: 360px;
+    height: 520px;
+    background: #F6F3EF;
+    border-radius: 20px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.25s ease;
+    z-index: 2147483647;
+}
+
+#wb-chat-window.hidden {
+    opacity: 0;
+    transform: scale(0.9);
+    pointer-events: none;
+}
+
+/* Header */
+.wb-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #7A2E2A;
+    color: white;
+    padding: 14px;
+    padding-right: 50px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.wb-header img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: white;
+}
+
+.wb-header-text h3 {
+    margin: 0;
+    font-size: 16px; /* explizit */
+    font-weight: 600;
+    color: white;
+}
+
+.wb-header-text span {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px; /* explizit */
+    color: #f6f3ef;
+    opacity: 0.85;
+}
+
+/* Close Button – Windows Style */
+.wb-header button {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    color: white;
+    font-size: 18px; /* explizit */
+    border-radius: 8px;
+    cursor: pointer;
+    backdrop-filter: blur(3px);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wb-header button:hover {
+    background: #e81123;
+    color: white;
+}
+
+/* Messages */
+.wb-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    font-size: 14px; /* Basis für Text in Bubbles */
+}
+
+.msg-bot {
+    background: #FFFFFF;
+    padding: 12px 14px;
+    border-radius: 12px;
+    max-width: 80%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 12px;
+    font-size: 14px; /* explizit */
+}
+
+/* Input Area */
+.wb-input {
+    padding: 12px;
+    display: flex;
+    background: #EFECE8;
+    gap: 8px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.wb-input input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 14px; /* explizit */
+    outline: none;
+}
+
+.wb-input button {
+    background: #7A2E2A;
+    border: none;
+    color: white;
+    width: 46px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px; /* explizit */
+}

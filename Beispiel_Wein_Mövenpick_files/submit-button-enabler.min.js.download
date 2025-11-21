@@ -1,0 +1,1 @@
+define(['jquery'],function($){'use strict';return function(){$.widget('mage.formKey',$.mage.formKey,{_create:function(){this._super();$(this.options.inputSelector).closest('form').find('[type="submit"]').prop('disabled',false);},});return $.mage.formKey;};});

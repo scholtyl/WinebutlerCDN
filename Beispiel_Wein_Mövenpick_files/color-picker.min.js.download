@@ -1,0 +1,6 @@
+define(['ko','jquery','../template/renderer'],function(ko,$,renderer){'use strict';function changeColorPickerStateBasedOnViewModel(element,viewModel){$(element).spectrum(viewModel.disabled()?'disable':'enable');}
+ko.bindingHandlers.colorPicker={init:function(element,valueAccessor,allBindings,viewModel){var config=valueAccessor(),changeValue=function(value){if(value==null){value='';}
+config.value(value.toString());};config.change=changeValue;config.hide=changeValue;config.show=function(){if(!viewModel.focused()){viewModel.focused(true);}
+return true;};require(['tinycolor','spectrum'],function(){$(element).spectrum(config);changeColorPickerStateBasedOnViewModel(element,viewModel);});},update:function(element,valueAccessor,allBindings,viewModel){var config=valueAccessor();if(config.value()===undefined){config.value('');}
+require(['tinycolor','spectrum'],function(tinycolor){if(tinycolor(config.value()).isValid()||config.value()===''){$(element).spectrum('set',config.value());if(config.value()!==''){config.value($(element).spectrum('get').toString());}}
+changeColorPickerStateBasedOnViewModel(element,viewModel);});}};renderer.addAttribute('colorPicker');});

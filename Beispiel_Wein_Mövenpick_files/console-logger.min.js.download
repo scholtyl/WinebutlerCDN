@@ -1,0 +1,1 @@
+define([],function(){'use strict';var logger={utils:{},error:console.error};logger.info=logger.log=logger.warn=logger.utils.asyncLog=logger.utils.createMessages=function(){};return logger;});
