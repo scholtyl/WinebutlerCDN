@@ -26,8 +26,11 @@ async function initWinebutlerWidget() {
         const btn = shadow.getElementById("wb-chat-button");
         const win = shadow.getElementById("wb-chat-window");
         const close = shadow.getElementById("wb-close");
+        const messages = shadow.querySelector(".wb-messages");
+        const input = shadow.querySelector(".wb-input input");
+        const sendBtn = shadow.querySelector(".wb-input button");
 
-        if (!btn || !win || !close) {
+        if (!btn || !win || !close || !messages || !input || !sendBtn) {
             console.warn("[Winebutler Widget] Elemente nicht gefunden, bitte widget.html pruefen.");
             return;
         }
@@ -41,6 +44,71 @@ async function initWinebutlerWidget() {
         close.onclick = () => {
             win.classList.add("hidden");
         };
+
+        const appendMessage = (text, author = "bot") => {
+            const div = document.createElement("div");
+            div.className = author === "user" ? "msg-user" : "msg-bot";
+            div.textContent = text;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+            return div;
+        };
+
+        const getWineName = () => "Pinot Noir";
+
+        const setInputDisabled = (state) => {
+            input.disabled = state;
+            sendBtn.disabled = state;
+            if (!state) {
+                input.focus();
+            }
+        };
+
+        const sendMessage = async () => {
+            const text = input.value.trim();
+            if (!text) {
+                return;
+            }
+
+            input.value = "";
+            appendMessage(text, "user");
+            setInputDisabled(true);
+
+            const pendingMessage = appendMessage("Der Winebutler denkt nach …", "bot");
+
+            try {
+                const response = await fetch("http://localhost:8080/api/v1/widget", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        userMessage: text,
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Status ${response.status}`);
+                }
+
+                const data = await response.json().catch(() => null);
+                const reply = data?.reply || data?.userMessage || "Danke für deine Anfrage!";
+                pendingMessage.textContent = reply;
+            } catch (err) {
+                console.error("[Winebutler Widget] Backend-Fehler:", err);
+                pendingMessage.textContent = "Entschuldigung, der Keller ist gerade nicht erreichbar. Bitte versuche es später erneut.";
+            } finally {
+                setInputDisabled(false);
+            }
+        };
+
+        sendBtn.addEventListener("click", sendMessage);
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
 
     } catch (e) {
         console.error("[Winebutler Widget] Fehler beim Initialisieren:", e);

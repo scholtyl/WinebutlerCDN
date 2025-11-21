@@ -122,6 +122,8 @@
     padding: 16px;
     overflow-y: auto;
     font-size: 14px; /* Basis für Text in Bubbles */
+    display: flex;
+    flex-direction: column;
 }
 
 .msg-bot {
@@ -129,8 +131,25 @@
     padding: 12px 14px;
     border-radius: 12px;
     max-width: 80%;
+    width: fit-content;
+    display: inline-block;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     margin-bottom: 12px;
+    font-size: 14px; /* explizit */
+}
+
+.msg-user {
+    background: #7A2E2A;
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 12px;
+    max-width: 80%;
+    width: fit-content;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    margin-bottom: 12px;
+    margin-left: auto;
+    text-align: left;
     font-size: 14px; /* explizit */
 }
 
