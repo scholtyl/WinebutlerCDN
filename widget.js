@@ -8,23 +8,20 @@ async function initWinebutlerWidget() {
             fetch(CDN + "widget.css").then(r => r.text())
         ]);
 
-        // Host-Element im normalen DOM anlegen
+        // Create host element in partner site
         const host = document.createElement("div");
         host.id = "winebutler-widget-host";
         document.body.appendChild(host);
 
-        // Shadow Root initialisieren
-        const shadow = host.attachShadow({ mode: "open" });
-
-        // Inhalt in Shadow DOM schreiben
+        // Create and attach shadow
+        const shadow = host.attachShadow({mode: "open"});
         shadow.innerHTML = `
-      <style>${css}</style>
-      <div id="wb-root">
-        ${html}
-      </div>
-    `;
+          <style>${css}</style>
+          <div id="wb-root">
+            ${html}
+          </div>
+        `;
 
-        // Elemente im Shadow DOM holen
         const btn = shadow.getElementById("wb-chat-button");
         const win = shadow.getElementById("wb-chat-window");
         const close = shadow.getElementById("wb-close");
@@ -33,7 +30,7 @@ async function initWinebutlerWidget() {
         const sendBtn = shadow.querySelector(".wb-input button");
 
         if (!btn || !win || !close || !messages || !input || !sendBtn) {
-            console.warn("[Winebutler Widget] Elemente nicht gefunden, bitte widget.html pruefen.");
+            console.warn("[Winebutler Widget] Did not find all needed elements.");
             return;
         }
 
@@ -42,7 +39,7 @@ async function initWinebutlerWidget() {
             win.classList.toggle("hidden");
         };
 
-        // X-Button: immer schliessen
+        // X-Button: close
         close.onclick = () => {
             win.classList.add("hidden");
         };
@@ -56,7 +53,10 @@ async function initWinebutlerWidget() {
             return div;
         };
 
-        const getWineName = () => "Pinot Noir";
+        const getKontextWineName = () => {
+            const wineNameElement = document.getElementById("wb-WineName");
+            return wineNameElement ? wineNameElement.textContent.trim() : null;
+        };
 
         const setInputDisabled = (state) => {
             input.disabled = state;
@@ -85,7 +85,8 @@ async function initWinebutlerWidget() {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        userMessage: text,
+                        userQuestion: text,
+                        context: getKontextWineName() || undefined
                     })
                 });
 
@@ -94,7 +95,7 @@ async function initWinebutlerWidget() {
                 }
 
                 const data = await response.json().catch(() => null);
-                const reply = data?.reply || data?.userMessage || "Danke für deine Anfrage!";
+                const reply = data?.reply || data?.chatAnswer || "Something went wrong";
                 pendingMessage.textContent = reply;
             } catch (err) {
                 console.error("[Winebutler Widget] Backend-Fehler:", err);
@@ -113,11 +114,11 @@ async function initWinebutlerWidget() {
         });
 
     } catch (e) {
-        console.error("[Winebutler Widget] Fehler beim Initialisieren:", e);
+        console.error("[Winebutler Widget] Error initializing:", e);
     }
 }
 
-// Sicherstellen, dass DOM vorhanden ist
+// Load once dom is ready
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initWinebutlerWidget);
 } else {
