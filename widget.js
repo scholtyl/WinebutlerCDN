@@ -44,10 +44,24 @@ async function initWinebutlerWidget() {
             win.classList.add("hidden");
         };
 
+        const formatMessage = (text) => {
+            let formatted = text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            
+            // Convert markup to HTML markup
+            formatted = formatted.replace(/\n/g, "<br>");
+            formatted = formatted.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+            formatted = formatted.replace(/_(.+?)_/g, "<em>$1</em>");
+            
+            return formatted;
+        };
+
         const appendMessage = (text, author = "bot") => {
             const div = document.createElement("div");
             div.className = author === "user" ? "msg-user" : "msg-bot";
-            div.textContent = text;
+            div.innerHTML = formatMessage(text);
             messages.appendChild(div);
             messages.scrollTop = messages.scrollHeight;
             return div;
@@ -95,8 +109,8 @@ async function initWinebutlerWidget() {
                 }
 
                 const data = await response.json().catch(() => null);
-                const reply = data?.reply || data?.chatAnswer || "Something went wrong";
-                pendingMessage.textContent = reply;
+                const reply = data?.chatAnswer || "Something went wrong";
+                pendingMessage.innerHTML = formatMessage(reply);
             } catch (err) {
                 console.error("[Winebutler Widget] Backend-Fehler:", err);
                 pendingMessage.textContent = "Entschuldigung, der Keller ist gerade nicht erreichbar. Bitte versuche es später erneut.";
